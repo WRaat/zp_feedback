@@ -2,9 +2,7 @@
 title: "Evaluatie zorgprogramma hartfalen"
 author: "Willem Raat"
 date: "`r Sys.Date()`"
-output:
-  github_document
-  pdf_document: default
+output: github_document
 ---
 
 ```{r setup, include=FALSE}

@@ -1,0 +1,137 @@
+---
+title: "Evaluatie zorgprogramma hartfalen"
+author: "Willem Raat"
+date: "`r Sys.Date()`"
+output:
+  pdf_document: default
+  html_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+
+library(tidyverse)
+library(readxl)
+library(lubridate)
+
+# read in the dataframes
+df.bnp <- read_excel("C:\\Users\\u0124654\\Google Drive\\Doctoraat\\Projecten\\Zorgprogramma HF Leuven\\dataverwerking\\huisartsenfeedback\\ntprobnp.xlsx", col_names = TRUE)
+df.gp <- read_excel("C:\\Users\\u0124654\\Google Drive\\Doctoraat\\Projecten\\Zorgprogramma HF Leuven\\dataverwerking\\huisartsenfeedback\\huisartsen.xlsx", col_names = TRUE)
+df.ed <- read_excel("C:\\Users\\u0124654\\Google Drive\\Doctoraat\\Projecten\\Zorgprogramma HF Leuven\\dataverwerking\\huisartsenfeedback\\educaties.xlsx", col_names = TRUE)
+
+# clean up the bnp dataframe
+df.bnp <- df.bnp%>%
+  select(datum, naam, praktijk)%>%
+  ## parse datetime column
+  mutate(datum = ymd(datum))%>%
+  ## clean name column %>%
+  mutate(naam = str_trim(naam))%>%
+  mutate(naam = str_to_title(naam))%>%
+  ## make a second praktijkcolumn based on the name column for each practice and the participating physicians
+  mutate(praktijkcode = case_when(
+    naam %in% c("Hauwaerts","Persoons", "Plu", "Roelofs", "Van Muysen", "Vanderhaegen", "Verle") ~ "1",
+    naam %in% c("Aertgeerts","De Ceulaer", "De Cock", "Dewyspelaere", "Vander Mijnsbrugge", "Vliers") ~ "2",
+    naam %in% c("Bertheloot","Deneffe", "Descamps", "Lisaerde", "Smeulders", "Verbakel") ~ "3",
+    naam %in% c("De Aguirre","Degelin", "Gils", "Pollers", "Sterckx", "Van Acoleyen", "Van Decraen", "Wouters") ~ "4",
+    naam %in% c("Dijckmans","Ghesquiere") ~ "5",
+    naam %in% c("Beke","Pacolet", "Radoes", "Van Pelt", "Van Wouwe", "Vanysacker") ~ "6",
+    naam %in% c("Arnalsteen","De Sutter", "Foley", "Maertens", "Maes", "Vanhoren") ~ "7",
+    naam %in% c("De Lille","Van Heden", "Van Pottelbergh") ~ "8",
+    naam %in% c("Delmeiren","Janssens", "Milants", "Pint", "Verscheure") ~ "9",
+    naam %in% c("Empsen","Libert", "Longin", "Spileers", "Tange", "Uyttebroeck", "Van Damme", "Van Den Bergh", "Van Den Eede", "Van Der Mullen") ~ "10",
+    naam %in% c("Boeve","Buelens", "Lemlijn", "Michielsen", "Soubotko", "Van Hulle", "Walder") ~ "11",
+    naam %in% c("Burvenich","Mannaerts", "Spaey", "Wesemael") ~ "12",
+    naam %in% c("Kiekens", "Groot", "Himpens", "Luyten", "Vanderstappen") ~ "13",
+    naam %in% c("Beerwerth","Deraeve", "Erkens", "Van Goethem") ~ "14",
+    naam %in% c("De Knijf","Dierickx", "Lenaerts", "Schoenmakers", "Van Baelen", "Van Boxem", "Van Mechelen", "Van Raemdonck") ~ "15",
+    naam %in% c("Bartholomeeusen","Bervoets", "Brankaer", "De Dycker", "Duquet", "Genevrois", "Hiele", "Jespers", "Rijnders") ~ "16",
+    naam %in% c("Nous","De Groote") ~ "17",
+    naam %in% c("Butaye") ~ "18",
+    naam %in% c("Loos", "Schoonheere", "Smeets", "Vanhaverbeke") ~ "19",
+    TRUE ~ "0"))
+
+df.bnp <- df.bnp%>%
+  mutate(praktijkcode = as.factor(praktijkcode))
+
+# clean up the educations dataset
+df.ed <- df.ed%>%
+  mutate(aanmeldingsbron = as.factor(aanmeldingsbron))%>%
+  mutate(opmerking = replace_na(opmerking, "geen"))%>%
+  mutate(opmerking = str_trim(opmerking))%>%
+  mutate(praktijkcode = case_when(
+    opmerking == "minnepoort" ~ "5",
+    opmerking == "butaye" ~ "18",
+    TRUE ~ "" 
+  ))%>%
+  select(datum, aanmeldingsbron, praktijkcode)%>%
+  mutate(bron = case_when(
+    aanmeldingsbron == "hh" ~ "Heilig Hart",
+    aanmeldingsbron == "uzl" ~ "UZ Leuven",
+    aanmeldingsbron == "ha" ~ "Huisarts",
+    TRUE ~ ""
+  ))%>%
+  select(-aanmeldingsbron)%>%
+  mutate(datum = as_date(datum))%>%
+  mutate(bron = as.factor(bron))%>%
+  mutate(bron = fct_relevel(bron, "Heilig Hart", "UZ Leuven", "Huisarts", ""))
+
+```
+
+# Inleiding
+
+In dit rapport vindt u een kort overzicht van de interventies van het Leuvense zorgprogramma hartfalen en van uw eigen implementatieproces.
+
+# NT-proBNP
+```{r, echo = FALSE, message = FALSE}
+# transform the dataset to include the sum total of NT-proBNPs per month per practice
+df.bnp2 <- df.bnp%>%
+  group_by(maand = floor_date(datum, "month"), praktijkcode)%>%
+  summarize(count = n())
+
+df.bnp3 <- df.bnp%>%
+  group_by(maand = floor_date(datum, "month"))%>%
+  summarize(count = n())
+
+```
+
+
+Tussen januari 2020 en `r format(Sys.time(), '%B %Y')` werden er `r nrow(df.bnp)` NT-proBNP testen afgenomen. Het maandgemiddelde was `r round(mean(df.bnp3$count))` testen. Onderstaande grafiek geeft een overzicht van het aantal testen per deelnemende praktijk.
+
+```{r, echo = FALSE}
+ggplot(df.bnp2, aes(x = maand, y = count, fill = praktijkcode)) +
+  geom_bar(stat = "identity", position = "stack", show.legend = FALSE, alpha = 0.8, colour = "black") +
+  theme_minimal() +
+  scale_x_date(date_labels = "%b", date_breaks = "1 month") +
+  labs(x = "Maand",
+       y = "Totaal") +
+  scale_fill_viridis_d()
+
+```
+
+# Educaties
+```{r, echo = FALSE, message = FALSE}
+# transform the ed dataset to include sum total of educations per month
+df.ed2 <- df.ed%>%
+  filter(bron != "")%>%
+  group_by(maand = floor_date(datum, "month"), bron)%>%
+  summarize(count = n())
+
+df.ed3 <- df.ed%>%
+  group_by(maand = floor_date(datum, "month"))%>%
+  summarize(count = n())
+```
+
+Tussen januari 2020 en `r format(Sys.time(), '%B %Y')` werden er `r nrow(df.ed)` educaties uitgevoerd. Het maandgemiddelde was `r round(mean(df.ed3$count))` educaties. Onderstaande grafiek geeft een overzicht van het aantal educaties per deelnemende praktijk.
+
+```{r, echo = FALSE}
+ggplot(df.ed2, aes(x = maand, y = count, fill = bron)) +
+  geom_bar(stat = "identity", position = "stack", show.legend = TRUE, alpha = 0.8, colour = "black") +
+  theme_minimal() +
+  scale_x_date(date_labels = "%b", date_breaks = "1 month") +
+  labs(x = "Maand",
+       y = "Totaal") +
+  scale_fill_viridis_d()
+
+```
+
+

@@ -73,6 +73,46 @@ df.ed <- df.ed%>%
   mutate(bron = as.factor(bron))%>%
   mutate(bron = fct_relevel(bron, "Heilig Hart", "UZ Leuven", "Huisarts", ""))
 
+# create a number of variables to include in the later process rapport
+## Step 1. create the interval period indicating the interval between dmp start and current date
+startdate <- ymd("2020-01-01")
+enddate <- ymd(Sys.Date())
+timespan <- interval(start = startdate, end = Sys.Date())
+interval.m <- time_length(timespan, unit ="month")
+
+## Step 2. create arguments defining the total number of gp's in the program and for each practice
+total.gp <- nrow(distinct(df.gp))
+
+total.gp1 <- nrow(distinct(filter(df.gp, praktijkcode ==1)))
+total.gp2 <- nrow(distinct(filter(df.gp, praktijkcode ==2)))
+total.gp3 <- nrow(distinct(filter(df.gp, praktijkcode ==3)))
+total.gp4 <- nrow(distinct(filter(df.gp, praktijkcode ==4)))
+total.gp5 <- nrow(distinct(filter(df.gp, praktijkcode ==5)))
+total.gp6 <- nrow(distinct(filter(df.gp, praktijkcode ==6)))
+total.gp7 <- nrow(distinct(filter(df.gp, praktijkcode ==7)))
+total.gp8 <- nrow(distinct(filter(df.gp, praktijkcode ==8)))
+total.gp9 <- nrow(distinct(filter(df.gp, praktijkcode ==9)))
+total.gp10 <- nrow(distinct(filter(df.gp, praktijkcode ==10)))
+total.gp11 <- nrow(distinct(filter(df.gp, praktijkcode ==11)))
+total.gp12 <- nrow(distinct(filter(df.gp, praktijkcode ==12)))
+total.gp13 <- nrow(distinct(filter(df.gp, praktijkcode ==13)))
+total.gp14 <- nrow(distinct(filter(df.gp, praktijkcode ==14)))
+total.gp15 <- nrow(distinct(filter(df.gp, praktijkcode ==15)))
+total.gp16 <- nrow(distinct(filter(df.gp, praktijkcode ==16)))
+total.gp17 <- nrow(distinct(filter(df.gp, praktijkcode ==17)))
+total.gp18 <- nrow(distinct(filter(df.gp, praktijkcode ==18)))
+
+## Step 3. define the total number of unique GPs who prescribed a test and total degree of participation
+unique.gp.bnp <- nrow(distinct(as.tibble(df.bnp$naam)))
+participation.total.bnp <- round(unique.gp.bnp/total.gp, 3)*100
+
+## Step 4. define the median number of tests per prescribing GP
+df.bnp4 <- df.bnp%>%
+  group_by(naam)%>%
+  summarize(aantal = n())
+
+median.total <- median(df.bnp4$aantal)
+
 ```
 
 # Inleiding
@@ -80,6 +120,7 @@ df.ed <- df.ed%>%
 In dit rapport vindt u een kort overzicht van de interventies van het Leuvense zorgprogramma hartfalen en van uw eigen implementatieproces.
 
 # NT-proBNP
+## Algemeen
 ```{r, echo = FALSE, message = FALSE}
 # transform the dataset to include the sum total of NT-proBNPs per month per practice
 df.bnp2 <- df.bnp%>%
@@ -107,6 +148,7 @@ ggplot(df.bnp2, aes(x = maand, y = count, fill = praktijkcode)) +
 ```
 
 # Educaties
+## Algemeen
 ```{r, echo = FALSE, message = FALSE}
 # transform the ed dataset to include sum total of educations per month
 df.ed2 <- df.ed%>%
@@ -131,5 +173,3 @@ ggplot(df.ed2, aes(x = maand, y = count, fill = bron)) +
   scale_fill_viridis_d()
 
 ```
-
-

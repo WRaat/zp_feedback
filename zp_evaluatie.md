@@ -1,7 +1,7 @@
 Evaluatie zorgprogramma hartfalen
 ================
 Willem Raat
-2021-04-26
+2021-04-27
 
 # Inleiding
 
@@ -10,6 +10,8 @@ Leuvense zorgprogramma hartfalen en van uw eigen implementatieproces.
 
 # NT-proBNP
 
+## Algemeen
+
 Tussen januari 2020 en april 2021 werden er 115 NT-proBNP testen
 afgenomen. Het maandgemiddelde was 8 testen. Onderstaande grafiek geeft
 een overzicht van het aantal testen per deelnemende praktijk.
@@ -17,6 +19,8 @@ een overzicht van het aantal testen per deelnemende praktijk.
 ![](zp_evaluatie_files/figure-gfm/unnamed-chunk-2-1.png)<!-- -->
 
 # Educaties
+
+## Algemeen
 
 Tussen januari 2020 en april 2021 werden er 39 educaties uitgevoerd. Het
 maandgemiddelde was 3 educaties. Onderstaande grafiek geeft een

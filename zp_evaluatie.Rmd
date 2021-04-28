@@ -11,6 +11,7 @@ knitr::opts_chunk$set(echo = FALSE)
 library(tidyverse)
 library(readxl)
 library(lubridate)
+library(gghighlight)
 
 # read in the dataframes
 df.bnp <- read_excel("C:\\Users\\u0124654\\Google Drive\\Doctoraat\\Projecten\\Zorgprogramma HF Leuven\\dataverwerking\\huisartsenfeedback\\ntprobnp.xlsx", col_names = TRUE)
@@ -101,6 +102,8 @@ total.gp15 <- nrow(distinct(filter(df.gp, praktijkcode ==15)))
 total.gp16 <- nrow(distinct(filter(df.gp, praktijkcode ==16)))
 total.gp17 <- nrow(distinct(filter(df.gp, praktijkcode ==17)))
 total.gp18 <- nrow(distinct(filter(df.gp, praktijkcode ==18)))
+total.gp19 <- nrow(distinct(filter(df.gp, praktijkcode ==19)))
+
 
 ## Step 3. define the total number of unique GPs who prescribed a test and total degree of participation and for each practice separately
 unique.gp.bnp <- nrow(distinct(as.tibble(df.bnp$naam)))
@@ -123,27 +126,31 @@ unique.gp.bnp15 <- nrow(distinct(filter(df.bnp, praktijkcode == 15), naam))
 unique.gp.bnp16 <- nrow(distinct(filter(df.bnp, praktijkcode == 16), naam))
 unique.gp.bnp17 <- nrow(distinct(filter(df.bnp, praktijkcode == 17), naam))
 unique.gp.bnp18 <- nrow(distinct(filter(df.bnp, praktijkcode == 18), naam))
+unique.gp.bnp19 <- nrow(distinct(filter(df.bnp, praktijkcode == 18), naam))
+
 
 participation.bnp <- round(unique.gp.bnp/total.gp, 3)*100
 
 participation.bnp1 <- round(unique.gp.bnp1/total.gp1, 3)*100
-participation.bnp2 <- round(unique.gp.bnp1/total.gp2, 3)*100
-participation.bnp3 <- round(unique.gp.bnp1/total.gp3, 3)*100
-participation.bnp4 <- round(unique.gp.bnp1/total.gp4, 3)*100
-participation.bnp5 <- round(unique.gp.bnp1/total.gp5, 3)*100
-participation.bnp6 <- round(unique.gp.bnp1/total.gp6, 3)*100
-participation.bnp7 <- round(unique.gp.bnp1/total.gp7, 3)*100
-participation.bnp8 <- round(unique.gp.bnp1/total.gp8, 3)*100
-participation.bnp9 <- round(unique.gp.bnp1/total.gp9, 3)*100
-participation.bnp10 <- round(unique.gp.bnp1/total.gp10, 3)*100
-participation.bnp11 <- round(unique.gp.bnp1/total.gp11, 3)*100
-participation.bnp12 <- round(unique.gp.bnp1/total.gp12, 3)*100
-participation.bnp13 <- round(unique.gp.bnp1/total.gp13, 3)*100
-participation.bnp14 <- round(unique.gp.bnp1/total.gp14, 3)*100
-participation.bnp15 <- round(unique.gp.bnp1/total.gp15, 3)*100
-participation.bnp16 <- round(unique.gp.bnp1/total.gp16, 3)*100
-participation.bnp17 <- round(unique.gp.bnp1/total.gp17, 3)*100
-participation.bnp18 <- round(unique.gp.bnp1/total.gp18, 3)*100
+participation.bnp2 <- round(unique.gp.bnp2/total.gp2, 3)*100
+participation.bnp3 <- round(unique.gp.bnp3/total.gp3, 3)*100
+participation.bnp4 <- round(unique.gp.bnp4/total.gp4, 3)*100
+participation.bnp5 <- round(unique.gp.bnp5/total.gp5, 3)*100
+participation.bnp6 <- round(unique.gp.bnp6/total.gp6, 3)*100
+participation.bnp7 <- round(unique.gp.bnp7/total.gp7, 3)*100
+participation.bnp8 <- round(unique.gp.bnp8/total.gp8, 3)*100
+participation.bnp9 <- round(unique.gp.bnp9/total.gp9, 3)*100
+participation.bnp10 <- round(unique.gp.bnp10/total.gp10, 3)*100
+participation.bnp11 <- round(unique.gp.bnp11/total.gp11, 3)*100
+participation.bnp12 <- round(unique.gp.bnp12/total.gp12, 3)*100
+participation.bnp13 <- round(unique.gp.bnp13/total.gp13, 3)*100
+participation.bnp14 <- round(unique.gp.bnp14/total.gp14, 3)*100
+participation.bnp15 <- round(unique.gp.bnp15/total.gp15, 3)*100
+participation.bnp16 <- round(unique.gp.bnp16/total.gp16, 3)*100
+participation.bnp17 <- round(unique.gp.bnp17/total.gp17, 3)*100
+participation.bnp18 <- round(unique.gp.bnp18/total.gp18, 3)*100
+participation.bnp19 <- round(unique.gp.bnp18/total.gp18, 3)*100
+
 
 ## Step 4. define the median number of tests per prescribing GP and for each practice separately
 median.bnp <- as.numeric(df.bnp
@@ -223,6 +230,11 @@ median.bnp18 <- as.numeric(df.bnp%>%filter(praktijkcode == 18)
                          %>%group_by(naam)
                          %>%summarize(aantal = n())
                          %>%summarize(median = median(aantal)))
+median.bnp18 <- as.numeric(df.bnp%>%filter(praktijkcode == 19)
+                         %>%group_by(naam)
+                         %>%summarize(aantal = n())
+                         %>%summarize(median = median(aantal)))
+
 
 ## Step 5. define the number of monthly tests generally and for each practice
 total.tests <- nrow(df.bnp)
@@ -245,6 +257,8 @@ total.tests15 <- nrow(filter(df.bnp, praktijkcode ==15))
 total.tests16 <- nrow(filter(df.bnp, praktijkcode ==16))
 total.tests17 <- nrow(filter(df.bnp, praktijkcode ==17))
 total.tests18 <- nrow(filter(df.bnp, praktijkcode ==18))
+total.tests19 <- nrow(filter(df.bnp, praktijkcode ==19))
+
 
 monthly.tests <- round(total.tests/interval.m, 2)
 
@@ -266,6 +280,8 @@ monthly.tests15 <- round(total.tests15/interval.m, 2)
 monthly.tests16 <- round(total.tests16/interval.m, 2)
 monthly.tests17 <- round(total.tests17/interval.m, 2)
 monthly.tests18 <- round(total.tests18/interval.m, 2)
+monthly.tests19 <- round(total.tests19/interval.m, 2)
+
 
 # Step 6. Calculate the total number of educations by GPs and for each practice separately
 
@@ -289,6 +305,8 @@ total.ed.gp15 <- nrow(filter(df.ed, bron == "Huisarts"& praktijkcode == 15))
 total.ed.gp16 <- nrow(filter(df.ed, bron == "Huisarts"& praktijkcode == 16))
 total.ed.gp17 <- nrow(filter(df.ed, bron == "Huisarts"& praktijkcode == 17))
 total.ed.gp18 <- nrow(filter(df.ed, bron == "Huisarts"& praktijkcode == 18))
+total.ed.gp19 <- nrow(filter(df.ed, bron == "Huisarts"& praktijkcode == 19))
+
 
 ```
 
@@ -338,7 +356,7 @@ df.ed3 <- df.ed%>%
   summarize(count = n())
 ```
 
-Tussen januari 2020 en `r format(Sys.time(), '%B %Y')` werden er `r nrow(df.ed)` educaties uitgevoerd. Het maandgemiddelde was `r round(mean(df.ed3$count))` educaties. Onderstaande grafiek geeft een overzicht van het aantal educaties per deelnemende praktijk.
+Tussen januari 2020 en `r format(Sys.time(), '%B %Y')` werden er `r nrow(df.ed)` educaties uitgevoerd. Het maandgemiddelde was `r round(mean(df.ed3$count))` educaties. Onderstaande grafiek geeft een overzicht van het aantal educaties en de bron van aanmelding.
 
 ```{r, echo = FALSE}
 ggplot(df.ed2, aes(x = maand, y = count, fill = bron)) +

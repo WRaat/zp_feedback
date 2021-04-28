@@ -63,3 +63,5 @@ df.bnp4 <- df.bnp%>%
   summarize(aantal = n())
 
 median.total <- median(df.bnp4$aantal)
+
+# generate a plot highlighting the number of tests per practice

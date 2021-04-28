@@ -1,0 +1,3 @@
+# Uw praktijk heeft X maandelijkse testen afgelegd. X artsen in uw praktijk hebben ten minste 1 test aangevraagd. Dit is een participatiegraad van X% tegenover een algemene participatiegraad van X% in het zorgprogramma.
+# Het mediane aantal testen in uw praktijk was X tegenover een mediaan van X testen algemeen.
+# Onderstaande grafiek geeft een overzicht van uw aantal testen in de tijd en tegenover het totale aantal afnames.

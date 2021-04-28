@@ -73,7 +73,7 @@ df.ed <- df.ed%>%
   mutate(bron = as.factor(bron))%>%
   mutate(bron = fct_relevel(bron, "Heilig Hart", "UZ Leuven", "Huisarts", ""))
 
-# create a number of variables to include in the later process rapport
+# Next create a number of variables in different steps to include in the later process rapport
 ## Step 1. create the interval period indicating the interval between dmp start and current date
 startdate <- ymd("2020-01-01")
 enddate <- ymd(Sys.Date())
@@ -102,16 +102,193 @@ total.gp16 <- nrow(distinct(filter(df.gp, praktijkcode ==16)))
 total.gp17 <- nrow(distinct(filter(df.gp, praktijkcode ==17)))
 total.gp18 <- nrow(distinct(filter(df.gp, praktijkcode ==18)))
 
-## Step 3. define the total number of unique GPs who prescribed a test and total degree of participation
+## Step 3. define the total number of unique GPs who prescribed a test and total degree of participation and for each practice separately
 unique.gp.bnp <- nrow(distinct(as.tibble(df.bnp$naam)))
-participation.total.bnp <- round(unique.gp.bnp/total.gp, 3)*100
 
-## Step 4. define the median number of tests per prescribing GP
-df.bnp4 <- df.bnp%>%
-  group_by(naam)%>%
-  summarize(aantal = n())
+unique.gp.bnp1 <- nrow(distinct(filter(df.bnp, praktijkcode == 1), naam))
+unique.gp.bnp2 <- nrow(distinct(filter(df.bnp, praktijkcode == 2), naam))
+unique.gp.bnp3 <- nrow(distinct(filter(df.bnp, praktijkcode == 3), naam))
+unique.gp.bnp4 <- nrow(distinct(filter(df.bnp, praktijkcode == 4), naam))
+unique.gp.bnp5 <- nrow(distinct(filter(df.bnp, praktijkcode == 5), naam))
+unique.gp.bnp6 <- nrow(distinct(filter(df.bnp, praktijkcode == 6), naam))
+unique.gp.bnp7 <- nrow(distinct(filter(df.bnp, praktijkcode == 7), naam))
+unique.gp.bnp8 <- nrow(distinct(filter(df.bnp, praktijkcode == 8), naam))
+unique.gp.bnp9 <- nrow(distinct(filter(df.bnp, praktijkcode == 9), naam))
+unique.gp.bnp10 <- nrow(distinct(filter(df.bnp, praktijkcode == 10), naam))
+unique.gp.bnp11 <- nrow(distinct(filter(df.bnp, praktijkcode == 11), naam))
+unique.gp.bnp12 <- nrow(distinct(filter(df.bnp, praktijkcode == 12), naam))
+unique.gp.bnp13 <- nrow(distinct(filter(df.bnp, praktijkcode == 13), naam))
+unique.gp.bnp14 <- nrow(distinct(filter(df.bnp, praktijkcode == 14), naam))
+unique.gp.bnp15 <- nrow(distinct(filter(df.bnp, praktijkcode == 15), naam))
+unique.gp.bnp16 <- nrow(distinct(filter(df.bnp, praktijkcode == 16), naam))
+unique.gp.bnp17 <- nrow(distinct(filter(df.bnp, praktijkcode == 17), naam))
+unique.gp.bnp18 <- nrow(distinct(filter(df.bnp, praktijkcode == 18), naam))
 
-median.total <- median(df.bnp4$aantal)
+participation.bnp <- round(unique.gp.bnp/total.gp, 3)*100
+
+participation.bnp1 <- round(unique.gp.bnp1/total.gp1, 3)*100
+participation.bnp2 <- round(unique.gp.bnp1/total.gp2, 3)*100
+participation.bnp3 <- round(unique.gp.bnp1/total.gp3, 3)*100
+participation.bnp4 <- round(unique.gp.bnp1/total.gp4, 3)*100
+participation.bnp5 <- round(unique.gp.bnp1/total.gp5, 3)*100
+participation.bnp6 <- round(unique.gp.bnp1/total.gp6, 3)*100
+participation.bnp7 <- round(unique.gp.bnp1/total.gp7, 3)*100
+participation.bnp8 <- round(unique.gp.bnp1/total.gp8, 3)*100
+participation.bnp9 <- round(unique.gp.bnp1/total.gp9, 3)*100
+participation.bnp10 <- round(unique.gp.bnp1/total.gp10, 3)*100
+participation.bnp11 <- round(unique.gp.bnp1/total.gp11, 3)*100
+participation.bnp12 <- round(unique.gp.bnp1/total.gp12, 3)*100
+participation.bnp13 <- round(unique.gp.bnp1/total.gp13, 3)*100
+participation.bnp14 <- round(unique.gp.bnp1/total.gp14, 3)*100
+participation.bnp15 <- round(unique.gp.bnp1/total.gp15, 3)*100
+participation.bnp16 <- round(unique.gp.bnp1/total.gp16, 3)*100
+participation.bnp17 <- round(unique.gp.bnp1/total.gp17, 3)*100
+participation.bnp18 <- round(unique.gp.bnp1/total.gp18, 3)*100
+
+## Step 4. define the median number of tests per prescribing GP and for each practice separately
+median.bnp <- as.numeric(df.bnp
+                         %>%group_by(naam)
+                         %>%summarize(aantal = n())
+                         %>%summarize(median = median(aantal)))
+
+median.bnp1 <- as.numeric(df.bnp%>%filter(praktijkcode == 1)
+                         %>%group_by(naam)
+                         %>%summarize(aantal = n())
+                         %>%summarize(median = median(aantal)))
+median.bnp2 <- as.numeric(df.bnp%>%filter(praktijkcode == 2)
+                         %>%group_by(naam)
+                         %>%summarize(aantal = n())
+                         %>%summarize(median = median(aantal)))
+median.bnp3 <- as.numeric(df.bnp%>%filter(praktijkcode == 3)
+                         %>%group_by(naam)
+                         %>%summarize(aantal = n())
+                         %>%summarize(median = median(aantal)))
+median.bnp4 <- as.numeric(df.bnp%>%filter(praktijkcode == 4)
+                         %>%group_by(naam)
+                         %>%summarize(aantal = n())
+                         %>%summarize(median = median(aantal)))
+median.bnp5 <- as.numeric(df.bnp%>%filter(praktijkcode == 5)
+                         %>%group_by(naam)
+                         %>%summarize(aantal = n())
+                         %>%summarize(median = median(aantal)))
+median.bnp6 <- as.numeric(df.bnp%>%filter(praktijkcode == 6)
+                         %>%group_by(naam)
+                         %>%summarize(aantal = n())
+                         %>%summarize(median = median(aantal)))
+median.bnp7 <- as.numeric(df.bnp%>%filter(praktijkcode == 7)
+                         %>%group_by(naam)
+                         %>%summarize(aantal = n())
+                         %>%summarize(median = median(aantal)))
+median.bnp8 <- as.numeric(df.bnp%>%filter(praktijkcode == 8)
+                         %>%group_by(naam)
+                         %>%summarize(aantal = n())
+                         %>%summarize(median = median(aantal)))
+median.bnp9 <- as.numeric(df.bnp%>%filter(praktijkcode == 9)
+                         %>%group_by(naam)
+                         %>%summarize(aantal = n())
+                         %>%summarize(median = median(aantal)))
+median.bnp10 <- as.numeric(df.bnp%>%filter(praktijkcode == 10)
+                         %>%group_by(naam)
+                         %>%summarize(aantal = n())
+                         %>%summarize(median = median(aantal)))
+median.bnp11 <- as.numeric(df.bnp%>%filter(praktijkcode == 11)
+                         %>%group_by(naam)
+                         %>%summarize(aantal = n())
+                         %>%summarize(median = median(aantal)))
+median.bnp12 <- as.numeric(df.bnp%>%filter(praktijkcode == 12)
+                         %>%group_by(naam)
+                         %>%summarize(aantal = n())
+                         %>%summarize(median = median(aantal)))
+median.bnp13 <- as.numeric(df.bnp%>%filter(praktijkcode == 13)
+                         %>%group_by(naam)
+                         %>%summarize(aantal = n())
+                         %>%summarize(median = median(aantal)))
+median.bnp14 <- as.numeric(df.bnp%>%filter(praktijkcode == 14)
+                         %>%group_by(naam)
+                         %>%summarize(aantal = n())
+                         %>%summarize(median = median(aantal)))
+median.bnp15 <- as.numeric(df.bnp%>%filter(praktijkcode == 15)
+                         %>%group_by(naam)
+                         %>%summarize(aantal = n())
+                         %>%summarize(median = median(aantal)))
+median.bnp16 <- as.numeric(df.bnp%>%filter(praktijkcode == 16)
+                         %>%group_by(naam)
+                         %>%summarize(aantal = n())
+                         %>%summarize(median = median(aantal)))
+median.bnp17 <- as.numeric(df.bnp%>%filter(praktijkcode == 17)
+                         %>%group_by(naam)
+                         %>%summarize(aantal = n())
+                         %>%summarize(median = median(aantal)))
+median.bnp18 <- as.numeric(df.bnp%>%filter(praktijkcode == 18)
+                         %>%group_by(naam)
+                         %>%summarize(aantal = n())
+                         %>%summarize(median = median(aantal)))
+
+## Step 5. define the number of monthly tests generally and for each practice
+total.tests <- nrow(df.bnp)
+
+total.tests1 <- nrow(filter(df.bnp, praktijkcode ==1))
+total.tests2 <- nrow(filter(df.bnp, praktijkcode ==2))
+total.tests3 <- nrow(filter(df.bnp, praktijkcode ==3))
+total.tests4 <- nrow(filter(df.bnp, praktijkcode ==4))
+total.tests5 <- nrow(filter(df.bnp, praktijkcode ==5))
+total.tests6 <- nrow(filter(df.bnp, praktijkcode ==6))
+total.tests7 <- nrow(filter(df.bnp, praktijkcode ==7))
+total.tests8 <- nrow(filter(df.bnp, praktijkcode ==8))
+total.tests9 <- nrow(filter(df.bnp, praktijkcode ==9))
+total.tests10 <- nrow(filter(df.bnp, praktijkcode ==10))
+total.tests11 <- nrow(filter(df.bnp, praktijkcode ==11))
+total.tests12 <- nrow(filter(df.bnp, praktijkcode ==12))
+total.tests13 <- nrow(filter(df.bnp, praktijkcode ==13))
+total.tests14 <- nrow(filter(df.bnp, praktijkcode ==14))
+total.tests15 <- nrow(filter(df.bnp, praktijkcode ==15))
+total.tests16 <- nrow(filter(df.bnp, praktijkcode ==16))
+total.tests17 <- nrow(filter(df.bnp, praktijkcode ==17))
+total.tests18 <- nrow(filter(df.bnp, praktijkcode ==18))
+
+monthly.tests <- round(total.tests/interval.m, 2)
+
+monthly.tests1 <- round(total.tests1/interval.m, 2)
+monthly.tests2 <- round(total.tests2/interval.m, 2)
+monthly.tests3 <- round(total.tests3/interval.m, 2)
+monthly.tests4 <- round(total.tests4/interval.m, 2)
+monthly.tests5 <- round(total.tests5/interval.m, 2)
+monthly.tests6 <- round(total.tests6/interval.m, 2)
+monthly.tests7 <- round(total.tests7/interval.m, 2)
+monthly.tests8 <- round(total.tests8/interval.m, 2)
+monthly.tests9 <- round(total.tests9/interval.m, 2)
+monthly.tests10 <- round(total.tests10/interval.m, 2)
+monthly.tests11 <- round(total.tests11/interval.m, 2)
+monthly.tests12 <- round(total.tests12/interval.m, 2)
+monthly.tests13 <- round(total.tests13/interval.m, 2)
+monthly.tests14 <- round(total.tests14/interval.m, 2)
+monthly.tests15 <- round(total.tests15/interval.m, 2)
+monthly.tests16 <- round(total.tests16/interval.m, 2)
+monthly.tests17 <- round(total.tests17/interval.m, 2)
+monthly.tests18 <- round(total.tests18/interval.m, 2)
+
+# Step 6. Calculate the total number of educations by GPs and for each practice separately
+
+total.ed.gp <- nrow(filter(df.ed, bron == "Huisarts"))
+
+total.ed.gp1 <- nrow(filter(df.ed, bron == "Huisarts"& praktijkcode == 1))
+total.ed.gp2 <- nrow(filter(df.ed, bron == "Huisarts"& praktijkcode == 2))
+total.ed.gp3 <- nrow(filter(df.ed, bron == "Huisarts"& praktijkcode == 3))
+total.ed.gp4 <- nrow(filter(df.ed, bron == "Huisarts"& praktijkcode == 4))
+total.ed.gp5 <- nrow(filter(df.ed, bron == "Huisarts"& praktijkcode == 5))
+total.ed.gp6 <- nrow(filter(df.ed, bron == "Huisarts"& praktijkcode == 6))
+total.ed.gp7 <- nrow(filter(df.ed, bron == "Huisarts"& praktijkcode == 7))
+total.ed.gp8 <- nrow(filter(df.ed, bron == "Huisarts"& praktijkcode == 8))
+total.ed.gp9 <- nrow(filter(df.ed, bron == "Huisarts"& praktijkcode == 9))
+total.ed.gp10 <- nrow(filter(df.ed, bron == "Huisarts"& praktijkcode == 10))
+total.ed.gp11 <- nrow(filter(df.ed, bron == "Huisarts"& praktijkcode == 11))
+total.ed.gp12 <- nrow(filter(df.ed, bron == "Huisarts"& praktijkcode == 12))
+total.ed.gp13 <- nrow(filter(df.ed, bron == "Huisarts"& praktijkcode == 13))
+total.ed.gp14 <- nrow(filter(df.ed, bron == "Huisarts"& praktijkcode == 14))
+total.ed.gp15 <- nrow(filter(df.ed, bron == "Huisarts"& praktijkcode == 15))
+total.ed.gp16 <- nrow(filter(df.ed, bron == "Huisarts"& praktijkcode == 16))
+total.ed.gp17 <- nrow(filter(df.ed, bron == "Huisarts"& praktijkcode == 17))
+total.ed.gp18 <- nrow(filter(df.ed, bron == "Huisarts"& praktijkcode == 18))
 
 ```
 
